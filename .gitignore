@@ -1,5 +1,7 @@
 # Python / Qt runtime
 .venv/
+venv/
+.env
 __pycache__/
 *.py[cod]
 
@@ -21,3 +23,14 @@ ionm_viewer_preview*.png
 # Keep an explicit anonymized sample only if you create one later.
 !samples/
 !samples/**/*.json
+
+# Local anesthesia-record data and generated review/output artifacts.
+anesthesia_record_extraction/正常/
+anesthesia_record_extraction/阳性/
+anesthesia_record_extraction/data/
+anesthesia_record_extraction/批量监测CSV/
+anesthesia_record_extraction/批量气体识别CSV/
+anesthesia_record_extraction/批量坐标对齐图/
+anesthesia_record_extraction/人工核对包/
+anesthesia_record_extraction/*_debug.json
+anesthesia_record_extraction/high_confidence_monitoring.csv

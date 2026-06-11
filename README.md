@@ -6,6 +6,11 @@ Qt desktop viewer for Cadwell-style intraoperative neurophysiological monitoring
 The app scans local case JSON files, parses waveform trials, converts raw sample
 values into physical voltage, and visualizes each trial with event timing.
 
+## Modules
+
+- `ionm_viewer.py`: desktop waveform viewer for Cadwell-style IONM JSON exports.
+- `anesthesia_record_extraction/`: anesthesia-record PDF/image extraction tools for blood pressure, heart rate, SpO2, EtCO2, and manual review packages.
+
 ## Data Structure
 
 The expected export shape is:
@@ -52,6 +57,8 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe ionm_viewer.py
 ```
+
+For anesthesia-record extraction, see `anesthesia_record_extraction/README.md`.
 
 ## Privacy
 
