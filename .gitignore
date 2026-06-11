@@ -1,0 +1,23 @@
+# Python / Qt runtime
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local screenshots / temporary files
+ionm_viewer_preview*.png
+
+# Patient exports and source data. Do not publish identifiable medical data.
+*.json
+*.exportzip
+*.xlsx
+*.xls
+*.pdf
+*.docx
+*.doc
+*.jpg
+*.jpeg
+*.png
+
+# Keep an explicit anonymized sample only if you create one later.
+!samples/
+!samples/**/*.json
