@@ -1,25 +1,51 @@
 # IONM JSON Waveform Viewer
 
-这个目录中的 JSON 是 Cadwell 导出的术中神经监测病例数据，主要结构如下：
+Qt desktop viewer for Cadwell-style intraoperative neurophysiological monitoring
+(IONM) JSON exports.
 
-- `Cases`: 病例列表，本数据集每个 JSON 通常只有 1 个病例。
-- `Cases[].Events`: 手术过程事件，包含 `Timestamp`、`Type`、`Message`、`Deleted`。
-- `Cases[].Modes`: 监测模式，例如 Lower SSEP、MEP、TOF、DNEP。
-- `Modes[].Trials`: 每次刺激/采集的试次，包含试次时间、刺激参数、波形。
-- `Trials[].Traces`: 每个通道的一条波形，核心字段是：
-  - `TraceData`: 原始采样点。
-  - `TraceDataScalar`: 原始数值乘以该系数后得到伏特 V。
-  - `TraceDataLength`: 采样点数，当前数据多为 640。
-  - `Sweep`: 单条波形窗口长度，SSEP/MEP 多为 0.1s，TOF 多为 0.02s。
-  - `Cursors`: 峰潜伏期/幅值标记，例如 `N37`、`P45`、`P`、`T`。
+The app scans local case JSON files, parses waveform trials, converts raw sample
+values into physical voltage, and visualizes each trial with event timing.
 
-推荐运行方式：
+## Data Structure
+
+The expected export shape is:
+
+- `Cases`: case list. The current dataset usually has one case per JSON file.
+- `Cases[].Events`: surgical timeline events with `Timestamp`, `Type`,
+  `Message`, and `Deleted`.
+- `Cases[].Modes`: monitoring modes such as Lower SSEP, MEP, TOF, and DNEP.
+- `Modes[].Trials`: repeated acquisitions/stimulation trials for a mode.
+- `Trials[].Traces`: channel waveforms for one trial.
+
+Important trace fields:
+
+- `TraceData`: raw waveform samples.
+- `TraceDataScalar`: multiplier that converts raw samples to volts.
+- `TraceDataLength`: sample count, commonly 640 in this dataset.
+- `Sweep`: response window length in seconds, commonly 0.1s for SSEP/MEP and
+  0.02s for TOF.
+- `Channel`: channel or lead information.
+- `Cursors`: latency/amplitude markers such as `N37`, `P45`, `P`, and `T`.
+
+Voltage conversion:
+
+```text
+voltage_v = TraceData * TraceDataScalar
+```
+
+The viewer displays SSEP-like traces in `uV`/`μV` scale and MEP/EMG/TOF traces
+in `mV` scale. The x-axis response window is calculated from `Sweep` and
+`TraceDataLength`.
+
+## Run
+
+Recommended on Windows:
 
 ```powershell
 .\run_viewer.bat
 ```
 
-也可以手动运行：
+Manual setup:
 
 ```powershell
 py -3.13 -m venv .venv
@@ -27,6 +53,8 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe ionm_viewer.py
 ```
 
-界面会自动扫描当前目录下的病例 `*.json`，并跳过 `.venv` 等依赖目录。波形数值会按 `TraceData * TraceDataScalar` 转换为电压，并按模式自动显示为 `uV` 或 `mV`；横轴按 `Sweep / TraceDataLength` 换算为毫秒。
+## Privacy
 
-导出文件中的时间戳按 Unix 微秒解释后与事件文本中的手术记录时间相符；界面同时显示绝对时间和以病例 `StartDate` 为零点的相对手术时间。
+Do not publish identifiable medical data. The repository `.gitignore` excludes
+patient exports and generated runtime files by default, including JSON, PDF,
+Excel, Word, image exports, `.exportzip`, and `.venv`.
